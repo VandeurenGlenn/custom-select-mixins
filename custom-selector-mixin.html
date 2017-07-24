@@ -1,0 +1,16 @@
+<link rel="import" href="custom-select-mixin.html">
+
+<script>
+'use strict';
+class CustomSelectorMixin extends CustomSelectMixin {
+  ready() {
+    this._onClick = this._onClick.bind(this);
+    this.addEventListener('click', this._onClick);
+  }
+  _onClick(event) {
+    const target = event.path[0];
+    const attr = this.attrForSelected;
+    this.selected = attr ? target.getAttribute(attr) : target;
+  }
+}
+</script>

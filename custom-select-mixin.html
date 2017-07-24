@@ -1,0 +1,107 @@
+<script>
+  class CustomSelectMixin extends HTMLElement {
+    static get observedAttributes() {
+      return ['selected'];
+    }
+
+    static get properties() {
+      return {
+        selected: {
+          observer: '__selectedObserver__'
+        }
+      }
+    }
+
+    get children() {
+      return this.slotted.assignedNodes();
+    }
+
+    /**
+    * @return {String}
+    */
+    get attrForSelected() {
+     return this.getAttribute('attr-for-selected') || 'name';
+    }
+
+    set attrForSelected(value) {
+     this.setAttribute('attr-for-selected', value);
+    }
+
+    created() {
+      this.slotchange = this.slotchange.bind(this);
+      this.slotted = this.shadowRoot.querySelector('slot');
+      this.slotted.addEventListener('slotchange', this.slotchange);
+    }
+
+    slotchange() {
+      let call = 0;
+      for (const child of this.children) {
+        // handle selected
+      }
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue) {
+        this[name] = newValue;
+      }
+    }
+
+    /**
+     * @param {string|number|HTMLElement} selected
+     */
+    select(string) {
+      this.selected = selected;
+    }
+
+    next(string) {
+      const index = this.children.indexOf(this.currentSelected);
+      if (index !== -1 && index >= 0 && this.children.length > index &&
+          (index + 1) <= this.children.length - 1) {
+        this.selected = this.children[index + 1]
+      }
+    }
+
+    previous() {
+      const index = this.children.indexOf(this.currentSelected);
+      if (index !== -1 && index >= 0 && this.children.length > index &&
+          (index - 1) >= 0) {
+        this.selected = this.children[index - 1]
+      }
+    }
+
+    /**
+     * @param {string|number|HTMLElement} change.value
+     */
+    __selectedObserver__({value}) {
+      if (typeof value === 'object') {
+        value.classList.add('custom-selected');
+        if (this.currentSelected) {
+          this.currentSelected.classList.remove('custom-selected');
+        }
+        this.currentSelected = value;
+      } else if (typeof value === 'string') {
+        this.children.map(child => {
+          if (child.getAttribute(this.attrForSelected) === value) {
+            child.classList.add('custom-selected');
+            if (this.currentSelected) {
+              this.currentSelected.classList.remove('custom-selected');
+              this.currentSelected = child;
+              return;
+            } else {
+              this.currentSelected = child;
+            }
+          } else {
+            child.classList.remove('custom-selected');
+          }
+        });
+      } else if (typeof value === 'number') {
+        const child = this.children[value];
+        child.classList.add('custom-selected');
+        if (this.currentSelected) {
+          this.currentSelected.classList.remove('custom-selected');
+        }
+        this.currentSelected = child;
+      }
+    }
+  }
+</script>
