@@ -49,7 +49,7 @@
     /**
      * @param {string|number|HTMLElement} selected
      */
-    select(string) {
+    select(selected) {
       this.selected = selected;
     }
 
@@ -81,17 +81,19 @@
         this.currentSelected = value;
       } else if (typeof value === 'string') {
         this.children.map(child => {
-          if (child.getAttribute(this.attrForSelected) === value) {
-            child.classList.add('custom-selected');
-            if (this.currentSelected) {
-              this.currentSelected.classList.remove('custom-selected');
-              this.currentSelected = child;
-              return;
+          if (child.nodeType === 1) {
+            if (child.getAttribute(this.attrForSelected) === value) {
+              child.classList.add('custom-selected');
+              if (this.currentSelected) {
+                this.currentSelected.classList.remove('custom-selected');
+                this.currentSelected = child;
+                return;
+              } else {
+                this.currentSelected = child;
+              }
             } else {
-              this.currentSelected = child;
+              child.classList.remove('custom-selected');
             }
-          } else {
-            child.classList.remove('custom-selected');
           }
         });
       } else if (typeof value === 'number') {
