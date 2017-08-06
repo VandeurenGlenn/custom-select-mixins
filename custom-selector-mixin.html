@@ -9,8 +9,9 @@ class CustomSelectorMixin extends CustomSelectMixin {
   }
   _onClick(event) {
     const target = event.path[0];
-    const attr = this.attrForSelected;
-    this.selected = attr ? target.getAttribute(attr) : target;
+    const attr = target.getAttribute(this.attrForSelected);
+    this.selected = attr ? attr : target;
+    this.dispatchEvent(new CustomEvent('selected', { detail: this.selected }));
   }
 }
 </script>

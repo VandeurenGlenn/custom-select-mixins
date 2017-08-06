@@ -7,9 +7,14 @@
     static get properties() {
       return {
         selected: {
+          value: 0,
           observer: '__selectedObserver__'
         }
       }
+    }
+
+    get slotted() {
+      return this.shadowRoot.querySelector('slot');
     }
 
     get children() {
@@ -29,19 +34,21 @@
 
     created() {
       this.slotchange = this.slotchange.bind(this);
-      this.slotted = this.shadowRoot.querySelector('slot');
       this.slotted.addEventListener('slotchange', this.slotchange);
     }
 
     slotchange() {
-      let call = 0;
-      for (const child of this.children) {
-        // handle selected
+      if (this.selected) {
+        this.__selectedObserver__({value: this.selected})
       }
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
       if (oldValue !== newValue) {
+        // check if value is number
+        if (!isNaN(newValue)) {
+          newValue = Number(newValue);
+        }
         this[name] = newValue;
       }
     }
@@ -69,40 +76,43 @@
       }
     }
 
+    _updateSelected(selected) {
+      selected.classList.add('custom-selected');
+      if (this.currentSelected && this.currentSelected !== selected) {
+        this.currentSelected.classList.remove('custom-selected');
+      }
+      this.currentSelected = selected;
+    }
+
     /**
      * @param {string|number|HTMLElement} change.value
      */
     __selectedObserver__({value}) {
-      if (typeof value === 'object') {
-        value.classList.add('custom-selected');
-        if (this.currentSelected) {
-          this.currentSelected.classList.remove('custom-selected');
-        }
-        this.currentSelected = value;
-      } else if (typeof value === 'string') {
-        this.children.map(child => {
-          if (child.nodeType === 1) {
-            if (child.getAttribute(this.attrForSelected) === value) {
-              child.classList.add('custom-selected');
-              if (this.currentSelected) {
-                this.currentSelected.classList.remove('custom-selected');
-                this.currentSelected = child;
-                return;
-              } else {
-                this.currentSelected = child;
+      switch (typeof value) {
+        case 'object':
+          this._updateSelected(value)
+          break;
+        case 'string':
+          for (const child of this.children) {
+            if (child.nodeType === 1) {
+              if (child.getAttribute(this.attrForSelected) === value) {
+                return this._updateSelected(child);
               }
-            } else {
-              child.classList.remove('custom-selected');
             }
           }
-        });
-      } else if (typeof value === 'number') {
-        const child = this.children[value];
-        child.classList.add('custom-selected');
-        if (this.currentSelected) {
-          this.currentSelected.classList.remove('custom-selected');
-        }
-        this.currentSelected = child;
+          if (this.currentSelected) {
+            this.currentSelected.classList.remove('custom-selected');
+          }
+          break;
+        default:
+          // set selected by index
+          const child = this.children[value];
+          if (child && child.nodeType === 1) {
+            this._updateSelected(child);
+          // remove selected even when nothing found, better to return nothing
+          } else if (this.currentSelected) {
+            this.currentSelected.classList.remove('custom-selected');
+          }
       }
     }
   }
