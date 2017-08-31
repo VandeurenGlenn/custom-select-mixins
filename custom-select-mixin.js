@@ -1,5 +1,5 @@
 'use strict';
-import PropertyMixin from './../node_modules/backed/mixins/property-mixin.js';
+import PropertyMixin from './../backed/mixins/property-mixin.js';
 export default base => {
   return class CustomSelectMixin extends PropertyMixin(base) {
     static get observedAttributes() {
