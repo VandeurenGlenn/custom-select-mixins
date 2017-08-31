@@ -1,24 +1,33 @@
-<script>
-  class CustomSelectMixin extends HTMLElement {
+'use strict';
+import PropertyMixin from './../node_modules/backed/mixins/property-mixin.js';
+export default base => {
+  return class CustomSelectMixin extends PropertyMixin(base) {
     static get observedAttributes() {
       return ['selected'];
     }
 
-    static get properties() {
-      return {
+    constructor(options = {}) {
+      const properties = {
         selected: {
           value: 0,
           observer: '__selectedObserver__'
         }
       }
+      if (options.properties) Object.assign(options.properties, properties);
+      else options.properties = properties;
+      super(options);
+    }
+
+    get root() {
+      return this.shadowRoot || this;
     }
 
     get slotted() {
-      return this.shadowRoot.querySelector('slot');
+      return this.shadowRoot ? this.shadowRoot.querySelector('slot') : this;
     }
 
-    get children() {
-      return this.slotted.assignedNodes();
+    get _assignedNodes() {
+      return 'assignedNodes' in this.slotted ? this.slotted.assignedNodes() : this.children;
     }
 
     /**
@@ -32,7 +41,8 @@
      this.setAttribute('attr-for-selected', value);
     }
 
-    created() {
+    connectedCallback() {
+      super.connectedCallback();
       this.slotchange = this.slotchange.bind(this);
       this.slotted.addEventListener('slotchange', this.slotchange);
     }
@@ -61,18 +71,18 @@
     }
 
     next(string) {
-      const index = this.children.indexOf(this.currentSelected);
-      if (index !== -1 && index >= 0 && this.children.length > index &&
-          (index + 1) <= this.children.length - 1) {
-        this.selected = this.children[index + 1]
+      const index = this._assignedNodes.indexOf(this.currentSelected);
+      if (index !== -1 && index >= 0 && this._assignedNodes.length > index &&
+          (index + 1) <= this._assignedNodes.length - 1) {
+        this.selected = this._assignedNodes[index + 1]
       }
     }
 
     previous() {
-      const index = this.children.indexOf(this.currentSelected);
-      if (index !== -1 && index >= 0 && this.children.length > index &&
+      const index = this._assignedNodes.indexOf(this.currentSelected);
+      if (index !== -1 && index >= 0 && this._assignedNodes.length > index &&
           (index - 1) >= 0) {
-        this.selected = this.children[index - 1]
+        this.selected = this._assignedNodes[index - 1]
       }
     }
 
@@ -87,15 +97,16 @@
     /**
      * @param {string|number|HTMLElement} change.value
      */
-    __selectedObserver__({value}) {
-      switch (typeof value) {
+    __selectedObserver__(value) {
+      console.log(this.selected);
+      switch (typeof this.selected) {
         case 'object':
-          this._updateSelected(value)
+          this._updateSelected(this.selected)
           break;
         case 'string':
-          for (const child of this.children) {
+          for (const child of this._assignedNodes) {
             if (child.nodeType === 1) {
-              if (child.getAttribute(this.attrForSelected) === value) {
+              if (child.getAttribute(this.attrForSelected) === this.selected) {
                 return this._updateSelected(child);
               }
             }
@@ -106,7 +117,7 @@
           break;
         default:
           // set selected by index
-          const child = this.children[value];
+          const child = this._assignedNodes[this.selected];
           if (child && child.nodeType === 1) {
             this._updateSelected(child);
           // remove selected even when nothing found, better to return nothing
@@ -116,4 +127,4 @@
       }
     }
   }
-</script>
+}

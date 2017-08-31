@@ -3,10 +3,22 @@
   <head>
     <meta charset="utf-8">
     <title>custom-select-mixins - demo</title>
-    <link rel="import" href="../../backed/backed.html">
-    <link rel="import" href="../custom-select-mixins.html">
   </head>
   <body>
-    <custom-select-mixins></custom-select-mixins>
+    <custom-selector>
+      <h1>one</h1>
+      <h1>two</h1>
+    </custom-selector>
   </body>
+  <script type="module">
+    import CustomSelectorMixin from './../custom-selector-mixin.js';
+
+    class CustomSelector extends CustomSelectorMixin(HTMLElement) {
+      constructor() {
+        super({});
+      }
+    }
+
+    export default customElements.define('custom-selector', CustomSelector)
+  </script>
 </html>
