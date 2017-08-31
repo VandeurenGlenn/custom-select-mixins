@@ -98,7 +98,6 @@ export default base => {
      * @param {string|number|HTMLElement} change.value
      */
     __selectedObserver__(value) {
-      console.log(this.selected);
       switch (typeof this.selected) {
         case 'object':
           this._updateSelected(this.selected)
