@@ -1,5 +1,7 @@
 'use strict';
 import PropertyMixin from './../backed/mixins/property-mixin.js';
+import merge from './../lodash-es/merge.js';
+
 export default base => {
   return class CustomSelectMixin extends PropertyMixin(base) {
     static get observedAttributes() {
@@ -10,10 +12,11 @@ export default base => {
       const properties = {
         selected: {
           value: 0,
+          reflect: true,
           observer: '__selectedObserver__'
         }
       }
-      if (options.properties) Object.assign(options.properties, properties);
+      if (options.properties) merge(options.properties, properties);
       else options.properties = properties;
       super(options);
     }
