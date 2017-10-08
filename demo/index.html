@@ -5,6 +5,14 @@
     <title>custom-select-mixins - demo</title>
   </head>
   <body>
+    <style media="screen">
+      .custom-selected {
+        background: rgba(0, 0, 0, 0.32);
+      }
+      h1 {
+        cursor: pointer;
+      }
+    </style>
     <custom-selector>
       <h1>one</h1>
       <h1>two</h1>
@@ -12,13 +20,14 @@
   </body>
   <script type="module">
     import CustomSelectorMixin from './../custom-selector-mixin.js';
+    import {define} from './../../backed/src/utils.js';
 
     class CustomSelector extends CustomSelectorMixin(HTMLElement) {
       constructor() {
-        super({});
+        super();
       }
     }
 
-    export default customElements.define('custom-selector', CustomSelector)
+    define(CustomSelector);
   </script>
 </html>
