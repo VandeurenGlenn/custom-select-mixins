@@ -37,18 +37,6 @@ export default base => {
       this.setAttribute('attr-for-selected', value);
     }
 
-    connectedCallback() {
-      super.connectedCallback();
-      this.slotchange = this.slotchange.bind(this);
-      this.slotted.addEventListener('slotchange', this.slotchange);
-    }
-
-    slotchange() {
-      if (this.selected) {
-        this.__selectedObserver__({value: this.selected})
-      }
-    }
-
     attributeChangedCallback(name, oldValue, newValue) {
       if (oldValue !== newValue) {
         // check if value is number
