@@ -1,28 +1,21 @@
 'use strict';
 import PropertyMixin from './../backed/mixins/property-mixin.js';
-import merge from './../lodash-es/merge.js';
+import {merge} from './../backed/src/utils.js';
 
 export default base => {
   return class CustomSelectMixin extends PropertyMixin(base) {
-    static get observedAttributes() {
-      return ['selected'];
-    }
 
-    constructor(options = {}) {
-      const properties = {
+    static get properties() {
+      return merge(super.properties, {
         selected: {
           value: 0,
-          reflect: true,
           observer: '__selectedObserver__'
         }
-      }
-      if (options.properties) merge(options.properties, properties);
-      else options.properties = properties;
-      super(options);
+      });
     }
 
-    get root() {
-      return this.shadowRoot || this;
+    constructor() {
+      super();
     }
 
     get slotted() {
@@ -37,11 +30,11 @@ export default base => {
     * @return {String}
     */
     get attrForSelected() {
-     return this.getAttribute('attr-for-selected') || 'name';
+      return this.getAttribute('attr-for-selected') || 'name';
     }
 
     set attrForSelected(value) {
-     this.setAttribute('attr-for-selected', value);
+      this.setAttribute('attr-for-selected', value);
     }
 
     connectedCallback() {

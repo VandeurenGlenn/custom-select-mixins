@@ -2,8 +2,8 @@ import CustomSelectMixin from './custom-select-mixin.js';
 
 export default base => {
   return class CustomSelectorMixin extends CustomSelectMixin(base) {
-    constructor(options) {
-      super(options);
+    constructor() {
+      super();
     }
     connectedCallback() {
       super.connectedCallback()
@@ -16,8 +16,10 @@ export default base => {
     _onClick(event) {
       const target = event.path[0];
       const attr = target.getAttribute(this.attrForSelected);
-      this.selected = attr ? attr : target;
-      this.dispatchEvent(new CustomEvent('selected', { detail: this.selected }));
+      if (target.localName !== this.localName) {
+        this.selected = attr ? attr : target;
+        this.dispatchEvent(new CustomEvent('selected', { detail: this.selected }));
+      }
     }
   }
 }
