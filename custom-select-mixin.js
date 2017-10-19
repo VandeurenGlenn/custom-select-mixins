@@ -55,7 +55,7 @@ export default base => {
     }
 
     next(string) {
-      const index = this._assignedNodes.indexOf(this.currentSelected);
+      const index = this.getIndexFor(this.currentSelected);
       if (index !== -1 && index >= 0 && this._assignedNodes.length > index &&
           (index + 1) <= this._assignedNodes.length - 1) {
         this.selected = this._assignedNodes[index + 1]
@@ -63,11 +63,18 @@ export default base => {
     }
 
     previous() {
-      const index = this._assignedNodes.indexOf(this.currentSelected);
+      const index = this.getIndexFor(this.currentSelected);
       if (index !== -1 && index >= 0 && this._assignedNodes.length > index &&
           (index - 1) >= 0) {
         this.selected = this._assignedNodes[index - 1]
       }
+    }
+
+    getIndexFor(element) {
+      if (element && element instanceof HTMLElement === false)
+        return console.error(`${element} is not an instanceof HTMLElement`);
+
+      return this._assignedNodes.indexOf(element || this.selected);
     }
 
     _updateSelected(selected) {
