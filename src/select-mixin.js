@@ -1,9 +1,9 @@
 'use strict';
-import PropertyMixin from './../backed/mixins/property-mixin.js';
-import {merge} from './../backed/src/utils.js';
+import PropertyMixin from '../node_modules/backed/src/mixins/property-mixin.js';
+import {merge} from '../node_modules/backed/src/utils.js';
 
 export default base => {
-  return class CustomSelectMixin extends PropertyMixin(base) {
+  return class SelectMixin extends PropertyMixin(base) {
 
     static get properties() {
       return merge(super.properties, {

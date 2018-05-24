@@ -1,7 +1,7 @@
-import CustomSelectMixin from './custom-select-mixin.js';
+import SelectMixin from './select-mixin.js';
 
 export default base => {
-  return class CustomSelectorMixin extends CustomSelectMixin(base) {
+  return class SelectorMixin extends SelectMixin(base) {
     constructor() {
       super();
     }

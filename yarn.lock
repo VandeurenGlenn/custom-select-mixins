@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-backed@^0.9.0:
-  version "0.9.5"
-  resolved "https://registry.yarnpkg.com/backed/-/backed-0.9.5.tgz#2aea24cd8cc7154842573e4ad788e1e3f8f3f949"
+backed@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/backed/-/backed-0.11.1.tgz#4f2ccd8f408d96c4ba8a462bfe958edf429ece30"
   dependencies:
     lit-html "^0.7.1"
 
