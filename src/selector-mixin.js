@@ -1,7 +1,17 @@
+import merge from '../../backed/src/utils/merge.js';
 import SelectMixin from './select-mixin.js';
 
 export default base => {
   return class SelectorMixin extends SelectMixin(base) {
+
+  static get properties() {
+      return merge(super.properties, {
+        selected: {
+          value: 0,
+          observer: '__selectedObserver__'
+        }
+      });
+    }
     constructor() {
       super();
     }
