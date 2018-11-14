@@ -9,6 +9,10 @@ export default base => {
         selected: {
           value: 0,
           observer: '__selectedObserver__'
+        },
+        multi: {
+          value: false,
+          reflect: true
         }
       });
     }
@@ -26,10 +30,24 @@ export default base => {
     _onClick(event) {
       const target = event.path[0];
       const attr = target.getAttribute(this.attrForSelected);
+      let selected;
+
       if (target.localName !== this.localName) {
-        this.selected = attr ? attr : target;
-        this.dispatchEvent(new CustomEvent('selected', { detail: this.selected }));
+        selected = attr ? attr : target;
+      } else {
+        selected = attr;
       }
+      if (this.multi) {
+        if (!Array.isArray(this.selected)) this.selected = [];
+        const index = this.selected.indexOf(selected);
+        if (index === -1) this.selected.push(selected);
+        else this.selected.splice(selected, 1)
+        // trigger observer
+        this.Selected = this.selected
+
+      } else this.selected = selected;
+
+      this.dispatchEvent(new CustomEvent('selected', { detail: selected }));
     }
   }
 }

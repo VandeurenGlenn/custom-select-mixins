@@ -89,31 +89,32 @@ export default base => {
      * @param {string|number|HTMLElement} change.value
      */
     __selectedObserver__(value) {
-      switch (typeof this.selected) {
-        case 'object':
-          this._updateSelected(this.selected)
-          break;
-        case 'string':
-          for (const child of this._assignedNodes) {
-            if (child.nodeType === 1) {
-              if (child.getAttribute(this.attrForSelected) === this.selected) {
-                return this._updateSelected(child);
-              }
+      const type = typeof this.selected;
+      if (Array.isArray(this.selected)) {
+        for (const child of this._assignedNodes) {
+          if (child.nodeType === 1) {
+            if (this.selected[child.getAttribute(this.attrForSelected)]) {
+              child.setAttribute('custom-selected');
+            } else {
+              child.removeAttribute('custom-selected');
             }
           }
-          if (this.currentSelected) {
-            this.currentSelected.classList.remove('custom-selected');
+        }
+        return;
+      } else if (type === 'object') return this._updateSelected(this.selected);
+      else if (type === 'string') {
+        for (const child of this._assignedNodes) {
+          if (child.nodeType === 1) {
+            if (child.getAttribute(this.attrForSelected) === this.selected) {
+              return this._updateSelected(child);
+            }
           }
-          break;
-        default:
-          // set selected by index
-          const child = this._assignedNodes[this.selected];
-          if (child && child.nodeType === 1) {
-            this._updateSelected(child);
-          // remove selected even when nothing found, better to return nothing
-          } else if (this.currentSelected) {
-            this.currentSelected.classList.remove('custom-selected');
-          }
+        }
+      } else {
+        // set selected by index
+        const child = this._assignedNodes[this.selected];
+        if (child && child.nodeType === 1) this._updateSelected(child);
+        // remove selected even when nothing found, better to return nothing
       }
     }
   }
