@@ -51,7 +51,9 @@ export default base => {
      * @param {string|number|HTMLElement} selected
      */
     select(selected) {
-      this.selected = selected;
+      if (selected) this.selected = selected;
+      // TODO: fix selectedobservers
+      if (this.multi) this.__selectedObserver__()
     }
 
     next(string) {
@@ -93,10 +95,10 @@ export default base => {
       if (Array.isArray(this.selected)) {
         for (const child of this._assignedNodes) {
           if (child.nodeType === 1) {
-            if (this.selected[child.getAttribute(this.attrForSelected)]) {
-              child.setAttribute('custom-selected');
+            if (this.selected.indexOf(child.getAttribute(this.attrForSelected)) !== -1) {
+              child.classList.add('custom-selected');
             } else {
-              child.removeAttribute('custom-selected');
+              child.classList.remove('custom-selected');
             }
           }
         }

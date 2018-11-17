@@ -41,9 +41,9 @@ export default base => {
         if (!Array.isArray(this.selected)) this.selected = [];
         const index = this.selected.indexOf(selected);
         if (index === -1) this.selected.push(selected);
-        else this.selected.splice(selected, 1)
+        else this.selected.splice(index, 1)
         // trigger observer
-        this.Selected = this.selected
+        this.select(this.selected)
 
       } else this.selected = selected;
 
