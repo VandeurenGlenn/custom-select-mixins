@@ -23,7 +23,13 @@ export default base => {
     }
 
     get _assignedNodes() {
-      return 'assignedNodes' in this.slotted ? this.slotted.assignedNodes() : this.children;
+      const nodes = 'assignedNodes' in this.slotted ? this.slotted.assignedNodes() : this.children
+      const arr = []
+      for (var i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
+        if (node.nodeType === 1) arr.push(node);
+      }
+      return arr;
     }
 
     /**
