@@ -28,7 +28,7 @@ export default base => {
       this.removeEventListener('click', this._onClick);
     }
     _onClick(event) {
-      const target = event.path[0];
+      const target = event.path ? event.path[0] : event.composedPath()[0];
       const attr = target.getAttribute(this.attrForSelected);
       let selected;
 
