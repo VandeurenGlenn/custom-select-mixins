@@ -2,6 +2,7 @@
 # yarn lockfile v1
 
 
-backed@0.12.1:
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/backed/-/backed-0.12.1.tgz#213944b1e457e253a6390a4559ef24cba4228f6b"
+backed@0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/backed/-/backed-0.13.0.tgz#0852aae4fa498a77c0445d5afb9999c640543929"
+  integrity sha512-X9uNRGu5Vrvsgtg6MB+5wPCOJgo4WIehWwLm3VqdSqnWFqMRxavP+301+6yP0EBvLJ8rYMVaeYrBbUSBy1fcig==
