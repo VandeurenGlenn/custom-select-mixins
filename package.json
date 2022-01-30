@@ -12,6 +12,6 @@
     "demo": "demo"
   },
   "dependencies": {
-    "backed": "0.12.1"
+    "backed": "0.13.0"
   }
 }
